@@ -1,0 +1,33 @@
+# Source: cloudbees-core/templates/cjoc-ingress.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: cjoc
+  labels:
+    app.kubernetes.io/instance: "cloudbees-core"
+    app.kubernetes.io/name: "cloudbees-core"
+    app.kubernetes.io/managed-by: "Helm"
+    helm.sh/chart: "cloudbees-core-3.24.1_80dadc174346"
+  annotations:
+    kubernetes.io/tls-acme: "false"
+
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/app-root: "/cjoc/teams-check/"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # "413 Request Entity Too Large" uploading plugins, increase client_max_body_size
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+spec:
+  rules:
+  -
+    host: "cbci.cloudbees.demo"
+    http:
+      paths:
+      - path: /cjoc
+        backend:
+          serviceName: cjoc
+          servicePort: 80
+  tls:
+    - hosts:
+        - "cbci.cloudbees.demo"
+      secretName: ingress-cert-secret

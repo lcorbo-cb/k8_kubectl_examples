@@ -1,0 +1,30 @@
+# Source: cloudbees-core/charts/ingress-nginx/templates/controller-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/load-balancer-type: Internal
+  labels:
+    helm.sh/chart: ingress-nginx-2.15.0
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: cloudbees-core
+    app.kubernetes.io/version: "0.35.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: cloudbees-core-ingress-nginx-controller
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: https
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: https
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: cloudbees-core
+    app.kubernetes.io/component: controller

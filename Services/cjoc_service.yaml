@@ -1,0 +1,25 @@
+ Source: cloudbees-core/templates/cjoc-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cjoc
+  labels:
+    app.kubernetes.io/instance: "cloudbees-core"
+    app.kubernetes.io/name: "cloudbees-core"
+    app.kubernetes.io/managed-by: "Helm"
+    helm.sh/chart: "cloudbees-core-3.24.1_80dadc174346"
+    app.kubernetes.io/component: cjoc
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+    - name: jnlp
+      port: 50000
+      targetPort: 50000
+      protocol: TCP
+  selector:
+    app.kubernetes.io/component: cjoc
+    com.cloudbees.cje.tenant: cjoc
+  type: ClusterIP
